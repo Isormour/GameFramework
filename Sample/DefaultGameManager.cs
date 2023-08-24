@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameFramework
 {
-    public class DefaultGameManager : GameManager<DefaultGameManager>
+    public class DefaultGameManager : GameManager<DefaultGameManager,InputManager>
     {
         protected override void Start()
         {
