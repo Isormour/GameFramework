@@ -31,6 +31,7 @@ namespace GameFramework
         protected virtual void Update()
         {
             sceneLoader.Update();
+            inputManager.Update();
         }
     }
 }

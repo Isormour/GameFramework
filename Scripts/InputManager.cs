@@ -19,5 +19,9 @@ namespace GameFramework
         {
             OnAnyClicked?.Invoke();
         }
+        public virtual void Update()
+        {
+            
+        }
     }
 }
