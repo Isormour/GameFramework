@@ -1,16 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GameFramework
 {
-    public class GameManager : MonoBehaviour
+    public abstract class GameManager : MonoBehaviour
     {
-        public static GameManager Instance;
+        public static GameManager Instance { get; protected set; }
         public SceneLoader sceneLoader { get; } = new();
-        private void Awake()
+        public InputManager inputManager { get; protected set; }
+    }
+    public abstract class GameManager<T> : GameManager where T: GameManager<T>
+    {
+        public static new T Instance { get; private set; }
+
+        protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -18,32 +20,17 @@ namespace GameFramework
             }
             else
             {
-                Instance = this;
+                Instance = (T)this;
+                GameManager.Instance = this;
             }
         }
-        private void Start()
+        protected virtual void Start()
         {
-            sceneLoader.LoadScene("Menu", () => { Debug.Log("Finished"); }, clickToChange: true);
-            InputManager inputManager = new InputManager();
+            inputManager = new InputManager();
         }
-        private void Update()
+        protected virtual void Update()
         {
             sceneLoader.Update();
-        }
-        public class InputManager
-        {
-            public static event Action OnAnyClicked;
-            public InputManager()
-            {
-                GameControls controls = new GameControls();
-                controls.MainMap.Enable();
-                controls.MainMap.any.started += AnyClicked;
-            }
-
-            private void AnyClicked(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-            {
-                OnAnyClicked?.Invoke();
-            }
         }
     }
 }

@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using GameFramework;
 
 public class LoadingSceneIndicator : MonoBehaviour
 {
-
     [SerializeField] TextMeshProUGUI loadingText;
     // Update is called once per frame
     private void Start()

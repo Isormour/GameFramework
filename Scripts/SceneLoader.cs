@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static GameFramework.GameManager;
 using UnityEngine.SceneManagement;
 
 namespace GameFramework
