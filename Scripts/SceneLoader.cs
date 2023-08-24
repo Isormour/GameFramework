@@ -58,7 +58,7 @@ namespace GameFramework
 
         private void SceneLoaded(AsyncOperation obj)
         {
-            onLoaded();
+            onLoaded?.Invoke();
             if (!isAdditive)
             {
                 SceneManager.UnloadSceneAsync("Loading");
