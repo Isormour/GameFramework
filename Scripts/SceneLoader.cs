@@ -12,7 +12,6 @@ namespace GameFramework
         bool isAdditive;
         bool clickToChange;
         AsyncOperation loadingOperation;
-       
 
         public SceneLoader()
         {

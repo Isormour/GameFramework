@@ -6,11 +6,11 @@ namespace GameFramework
     {
         public static GameManager Instance { get; protected set; }
         public SceneLoader sceneLoader { get; } = new();
-        public InputManager inputManager { get; protected set; }
     }
-    public abstract class GameManager<T> : GameManager where T: GameManager<T>
+    public abstract class GameManager<TSelf,TInput> : GameManager where TSelf : GameManager<TSelf,TInput> where TInput : InputManager, new()
     {
-        public static new T Instance { get; private set; }
+        public static new TSelf Instance { get; private set; }
+        public TInput inputManager { get; protected set; }
 
         protected virtual void Awake()
         {
@@ -20,13 +20,13 @@ namespace GameFramework
             }
             else
             {
-                Instance = (T)this;
+                Instance = (TSelf)this;
                 GameManager.Instance = this;
             }
         }
         protected virtual void Start()
         {
-            inputManager = new InputManager();
+            inputManager = new();
         }
         protected virtual void Update()
         {
