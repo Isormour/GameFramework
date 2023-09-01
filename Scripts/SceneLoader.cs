@@ -18,26 +18,23 @@ namespace GameFramework
         bool sceneLoaded = false;
         bool previousSceneUnloaded = false;
         List<string> loadedScenes = new List<string>();
-
-        public event Action OnFinishChange;
+        public Action OnLoadedScene;
         public SceneLoader()
         {
-
+          
         }
         public void Initialize()
         {
-            GetLoadedScenes();
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
+            GetCurrentScenes();
         }
-        void GetLoadedScenes()
+        void GetCurrentScenes()
         {
             int sceneCount = SceneManager.sceneCount;
             for (int i = 0; i < sceneCount; i++)
             {
                 Scene tempScene = SceneManager.GetSceneAt(i);
-                if (tempScene.isLoaded)
-                {
-                    loadedScenes.Add(tempScene.name);
-                }
+                loadedScenes.Add(tempScene.name);
             }
         }
         public void Update()
@@ -58,7 +55,7 @@ namespace GameFramework
             if (loadedScenes.Contains(sceneName))
             {
                 SceneManager.UnloadSceneAsync(sceneName);
-                loadedScenes.Remove(SceneName);
+                loadedScenes.Remove(sceneName);
             }
         }
         public void LoadScene(string sceneName, System.Action onLoaded, bool isAdditive = false, bool clickToChange = false)
@@ -79,6 +76,7 @@ namespace GameFramework
                 loadingOperation = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
                 loadingOperation.completed += LoadingSceneLoaded;
             }
+            loadingOperation.priority = 255;
             loadedScenes.Add(sceneName);
         }
 
@@ -92,7 +90,7 @@ namespace GameFramework
         private void SceneLoaded(AsyncOperation obj)
         {
             sceneLoaded = true;
-            if (previousSceneUnloaded && !isAdditive)
+            if (previousSceneUnloaded || isAdditive)
             {
                 FinishChangeScene();
             }
@@ -114,7 +112,7 @@ namespace GameFramework
             }
 
             onLoaded?.Invoke();
-            OnFinishChange?.Invoke(); // s³abe...
+            OnLoadedScene?.Invoke();
         }
         private void LoadingSceneLoaded(AsyncOperation obj)
         {
