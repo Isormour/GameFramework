@@ -60,22 +60,24 @@ namespace GameFramework
         }
         public void LoadScene(string sceneName, System.Action onLoaded, bool isAdditive = false, bool clickToChange = false)
         {
-            previousLoadedScene = SceneName;
-            SceneName = sceneName;
-            this.onLoaded = onLoaded;
-            this.isAdditive = isAdditive;
-            this.clickToChange = clickToChange;
-            sceneLoaded = false;
-            if (this.isAdditive)
+            if (isAdditive)
             {
-                loadingOperation = SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
+                loadingOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
                 loadingOperation.completed += SceneLoaded;
             }
             else
             {
+                previousLoadedScene = SceneName;
+                SceneName = sceneName;
                 loadingOperation = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
                 loadingOperation.completed += LoadingSceneLoaded;
             }
+            
+            this.onLoaded = onLoaded;
+            this.isAdditive = isAdditive;
+            this.clickToChange = clickToChange;
+            sceneLoaded = false;
+            
             loadingOperation.priority = 255;
             loadedScenes.Add(sceneName);
         }
